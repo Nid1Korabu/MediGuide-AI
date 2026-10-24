@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -10,7 +9,7 @@ dotenv.config({
 });
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 if (!process.env.GEMINI_API_KEY) {
   console.error("GEMINI_API_KEY is missing from server/.env");
@@ -135,9 +134,7 @@ Rules:
 
     clearTimeout(timeoutId);
 
-    console.log(
-      `Gemini response time: ${Date.now() - startTime} ms`
-    );
+    console.log(`Gemini response time: ${Date.now() - startTime} ms`);
 
     const answer = response.text;
 
@@ -156,7 +153,7 @@ Rules:
   } catch (error) {
     console.error(
       `Gemini request failed after ${Date.now() - startTime} ms:`,
-      error.message
+      error.message,
     );
 
     return res.status(504).json({
@@ -168,8 +165,6 @@ Rules:
   }
 });
 
-app.listen(PORT, () => {
-  console.log(
-    `MediGuide AI backend is running at http://localhost:${PORT}`
-  );
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`MediGuide AI backend is running on port ${PORT}`);
 });
